@@ -12,15 +12,9 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        // return "cheguei aqui";
+        return Brand::all();
+      
     }
 
     /**
@@ -28,38 +22,70 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        /// return "cheguei aqui";
+        // dd($request);
+        // Brand::create($request->all());
+        if(Brand::create($request->all())){
+            return response()->json([
+                'message' => 'Marca cadastrada com sucesso!'
+            ], 201);
+        }
+        return response()->json([
+            'message' => 'Erro ao ralizar o cadastro da marca'
+        ], 404);
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Brand $brand)
+    public function show($brand)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Brand $brand)
-    {
-        //
+        // return Brand::findOrFail($brand);
+        $brand = Brand::find($brand);
+        if ($brand){
+            return $brand;
+        }
+        return response()->json([
+            'message' => 'Marca não encontrada'
+        ], 404);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brand)
-    {
-        //
+    public function update(Request $request, string $brand)
+    {   
+        // $brand = Brand::findOrFail($brand);
+        // $brand->update($request->all());
+        // return $brand;
+
+        $brand = Brand::find($brand);
+        if($brand){
+            $brand->update($request->all());
+            return $brand;
+        }
+        return response()->json([
+            'message' => 'Não foi possivel realizar esta operação'
+        ], 404);
+
+
+    
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Brand $brand)
+    public function destroy(string $brand)
     {
-        //
+    //    return Brand::destroy($brand);
+       if(Brand::destroy($brand)){
+        return response()->json([
+            'message' => 'Marca excluída com sucesso'
+        ], 201);
+       }
+       return response()->json([
+        'message' => 'Não possível realizar esta exclusão, marca ou ID não encontrados!'
+       ],404);
     }
 }
