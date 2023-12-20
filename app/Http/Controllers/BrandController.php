@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBrandRequest;
+
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateBrandRequest;
-
-
+use App\Http\Requests\StoreBrandRequest;
 
  
 
@@ -28,7 +27,7 @@ class BrandController extends Controller
      */
     public function store(StoreBrandRequest $request, Brand $brand) 
     {
-         
+
         if(Brand::create($request->all())){
             return response()->json([
                 'message' => 'Marca cadastrada com sucesso!'
