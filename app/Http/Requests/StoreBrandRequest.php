@@ -26,4 +26,13 @@ class StoreBrandRequest extends FormRequest
             'image' => 'required',
         ];
     }
+      public function messages(){
+        return  
+         [
+            'required' => 'O campo :attribute é obrigatório',
+            'name.unique' => 'O nome da marca já existe',
+            'name.min' => 'O nome deve ter no minimo 3 caracteres',
+         ];
+        
+    }
 }

@@ -22,8 +22,17 @@ class UpdateBrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:brands,name,'.$this->id.'|min:3', 
+            'name' => 'required|unique:brands,name,|min:3', 
             'image' => 'required',
-             ];
+        ];
+    }
+      public function messages(){
+        return  
+         [
+            'required' => 'O campo :attribute é obrigatório',
+            'name.unique' => 'O nome da marca já existe',
+            'name.min' => 'O nome deve ter no minimo 3 caracteres',
+         ];
+        
     }
 }
