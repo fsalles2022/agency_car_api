@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBrandRequest;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use App\Http\Requests\UpdateBrandRequest;
+
+
+
+ 
 
 class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Brand $brand)
     {
         // return "cheguei aqui";
         return Brand::all();
@@ -20,11 +26,9 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBrandRequest $request, Brand $brand) 
     {
-        /// return "cheguei aqui";
-        // dd($request);
-        // Brand::create($request->all());
+         
         if(Brand::create($request->all())){
             return response()->json([
                 'message' => 'Marca cadastrada com sucesso!'
@@ -54,12 +58,8 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $brand)
-    {   
-        // $brand = Brand::findOrFail($brand);
-        // $brand->update($request->all());
-        // return $brand;
-
+    public function update(UpdateBrandRequest $request, string $brand)
+    {
         $brand = Brand::find($brand);
         if($brand){
             $brand->update($request->all());
