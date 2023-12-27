@@ -7,8 +7,9 @@ use App\Models\Brand;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateBrandRequest;
 use App\Http\Requests\StoreBrandRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
- 
+
 
 class BrandController extends Controller
 {
@@ -19,16 +20,15 @@ class BrandController extends Controller
     {
         // return "cheguei aqui";
         return Brand::all();
-      
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBrandRequest $request, Brand $brand) 
+    public function store(StoreBrandRequest $request, Brand $brand)
     {
 
-        if(Brand::create($request->all())){
+        if (Brand::create($request->all())) {
             return response()->json([
                 'message' => 'Marca cadastrada com sucesso!'
             ], 201);
@@ -36,7 +36,6 @@ class BrandController extends Controller
         return response()->json([
             'message' => 'Erro ao ralizar o cadastro da marca'
         ], 404);
-
     }
 
     /**
@@ -46,7 +45,7 @@ class BrandController extends Controller
     {
         // return Brand::findOrFail($brand);
         $brand = Brand::find($brand);
-        if ($brand){
+        if ($brand) {
             return $brand;
         }
         return response()->json([
@@ -57,34 +56,44 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBrandRequest $request, string $brand)
+    public function update(UpdateBrandRequest $request, string $brandId)
     {
-        $brand = Brand::find($brand);
-        if($brand){
-            $brand->update($request->all());
-            return $brand;
+        try {
+            $brand = Brand::find($brandId);
+
+            if ($brand) {
+                // Receba os campos específicos que podem ser atualizados
+                $brandFields = $request->only(['name', 'image']);
+                $brand->update($brandFields);
+
+                return response()->json([
+                    'message' => "Marca atualizada com sucesso!",
+                    'brand' => $brand, // Inclua o objeto Brand diretamente
+                ], 201);
+            }
+        
+
+            // Adicione o código para lidar com a situação em que $brand não é encontrado
+        } catch (HttpResponseException $message) {
+            // Retorna a resposta de erro personalizada em caso de falha na validação
+            return $message->getResponse();
         }
-        return response()->json([
-            'message' => 'Não foi possivel realizar esta operação'
-        ], 404);
-
-
-    
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $brand)
     {
-    //    return Brand::destroy($brand);
-       if(Brand::destroy($brand)){
+        //    return Brand::destroy($brand);
+        if (Brand::destroy($brand)) {
+            return response()->json([
+                'message' => 'Marca excluída com sucesso'
+            ], 201);
+        }
         return response()->json([
-            'message' => 'Marca excluída com sucesso'
-        ], 201);
-       }
-       return response()->json([
-        'message' => 'Não possível realizar esta exclusão, marca ou ID não encontrados!'
-       ],404);
+            'message' => 'Não possível realizar esta exclusão, marca ou ID não encontrados!'
+        ], 404);
     }
 }
