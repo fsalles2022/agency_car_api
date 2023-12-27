@@ -22,11 +22,12 @@ class StoreBrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:brands,name,|min:3', 
-            'image' => 'required',
+            'name' => 'required|unique:brands|min:3|max:255',
+            'image' =>'required'
         ];
     }
-      public function messages(){
+
+    public function message(): array{
         return  
          [
             'required' => 'O campo :attribute é obrigatório',
