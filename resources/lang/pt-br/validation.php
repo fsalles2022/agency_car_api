@@ -6,5 +6,8 @@ return [
             'min' => 'O campo nome deve ter pelo menos 3 caracteres.',
             'unique' => 'O nome da marca já existe',
         ],
+        'image' => [
+            'mimes' =>"Somente arquivos com extensão .png",
+        ],
     ],
 ];
