@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('carmodel_id');
-            $table->string('placa', 10)->unique();
-            $table->boolean('disponivel');
+            $table->string('plate', 10)->unique();
+            $table->boolean('available');
             $table->integer('km');
             $table->timestamps();
     
