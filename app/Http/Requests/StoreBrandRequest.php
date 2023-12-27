@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreBrandRequest extends FormRequest
 {
@@ -27,13 +29,21 @@ class StoreBrandRequest extends FormRequest
         ];
     }
 
-    public function message(): array{
-        return  
-         [
-            'required' => 'O campo :attribute é obrigatório',
-            'name.unique' => 'O nome da marca já existe',
-            'name.min' => 'O nome deve ter no minimo 3 caracteres',
-         ];
+    // public function message(): array{
+    //     return  
+    //      [
+    //         'required' => 'O campo :attribute é obrigatório',
+    //         'name.unique' => 'O nome da marca já existe',
+    //         'name.min' => 'O nome deve ter no minimo 3 caracteres',
+    //      ];
         
+    // }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Erro de validação',
+            'errors' => $validator->errors(),
+        ], 422));
     }
 }
