@@ -27,20 +27,25 @@ class BrandController extends Controller
      */
     public function store(StoreBrandRequest $request, Brand $brand)
     {
+        // Manipulação do upload da imagem
+        $imagePath = $request->file('image')->store('images', 'public');
 
-        if (Brand::create($request->all())) {
+        // Criação do modelo
+        if (Brand::create([
+            'image' => $imagePath,
+            'name' => $request->input('name'),
+        ])) {
             return response()->json([
                 'message' => 'Marca cadastrada com sucesso!'
             ], 201);
         }
+
         return response()->json([
             'message' => 'Erro ao ralizar o cadastro da marca'
         ], 404);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show($brand)
     {
         // return Brand::findOrFail($brand);
@@ -71,7 +76,7 @@ class BrandController extends Controller
                     'brand' => $brand, // Inclua o objeto Brand diretamente
                 ], 201);
             }
-        
+            // dd($request->method());
 
             // Adicione o código para lidar com a situação em que $brand não é encontrado
         } catch (HttpResponseException $message) {
