@@ -16,8 +16,9 @@ class UpdateBrandRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'unique:brands|min:3|max:255',
-                 ];
+            'name' => 'min:3|max:255',
+            'image' =>'file|mimes:png',
+        ];
     }
 
     protected function failedValidation(Validator $validator)
