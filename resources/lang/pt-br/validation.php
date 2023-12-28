@@ -9,7 +9,7 @@ return [
         ],
         'image' => [
             'required' => 'O campo imagem deve conter uma imagem válida',
-            'mimes' =>"Somente arquivos com extensão .png",
+            'mimes' =>"o Campo imagem aceita somente arquivos com extensão .png, jpeg e webp",
         ],
     ],
 ];
