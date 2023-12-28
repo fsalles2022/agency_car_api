@@ -29,7 +29,7 @@ class BrandController extends Controller
     public function store(StoreBrandRequest $request, Brand $brand)
     {
         // Manipulação do upload da imagem
-     
+
         $imagePath = $request->file('image')->store('images', 'public');
 
         // Criação do modelo
@@ -45,7 +45,7 @@ class BrandController extends Controller
 
         return response()->json([
             'message' => 'Erro ao ralizar o cadastro da marca'
-            
+
         ], 404);
     }
 
@@ -71,7 +71,7 @@ class BrandController extends Controller
             $brand = Brand::find($brandId);
 
             if ($brand) {
-               // Receba os campos específicos que podem ser atualizados
+                // Receba os campos específicos que podem ser atualizados
                 // $imagePath = $request->file('image')->store('images', 'public');
                 // Brand::create([
                 //     'image' => $imagePath,
@@ -81,7 +81,7 @@ class BrandController extends Controller
                 // $brandFields = $request->only(['name', 'image']);
                 // $brand->update($brandFields);
 
-                if($request->file('image')){
+                if ($request->file('image')) {
                     Storage::disk('public')->delete($brand->image);
                 }
 
@@ -96,7 +96,7 @@ class BrandController extends Controller
                     'brand' => $brand, // Inclua o objeto Brand diretamente
                 ], 201);
             }
-          
+
 
             // Adicione o código para lidar com a situação em que $brand não é encontrado
         } catch (HttpResponseException $message) {
@@ -113,8 +113,8 @@ class BrandController extends Controller
     {
         $brand = Brand::findOrFail($id);
 
-            Storage::disk('public')->delete($brand->image);
-       
+        Storage::disk('public')->delete($brand->image);
+
         //    return Brand::destroy($brand);
         if (Brand::destroy($id)) {
             return response()->json([
