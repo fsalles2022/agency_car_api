@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UpdateBrandRequest;
 use App\Http\Requests\StoreBrandRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -28,6 +29,7 @@ class BrandController extends Controller
     public function store(StoreBrandRequest $request, Brand $brand)
     {
         // Manipulação do upload da imagem
+     
         $imagePath = $request->file('image')->store('images', 'public');
 
         // Criação do modelo
@@ -36,12 +38,14 @@ class BrandController extends Controller
             'name' => $request->input('name'),
         ])) {
             return response()->json([
-                'message' => 'Marca cadastrada com sucesso!'
+                'message' => "Marca cadastrada com sucesso!",
+                // 'brand' => $brand, //Inclua o objeto Brand diretamente
             ], 201);
         }
 
         return response()->json([
             'message' => 'Erro ao ralizar o cadastro da marca'
+            
         ], 404);
     }
 
@@ -67,16 +71,32 @@ class BrandController extends Controller
             $brand = Brand::find($brandId);
 
             if ($brand) {
-                // Receba os campos específicos que podem ser atualizados
-                $brandFields = $request->only(['name', 'image']);
-                $brand->update($brandFields);
+               // Receba os campos específicos que podem ser atualizados
+                // $imagePath = $request->file('image')->store('images', 'public');
+                // Brand::create([
+                //     'image' => $imagePath,
+                //     'name' => $request->input('name'),
+                // ]);
+
+                // $brandFields = $request->only(['name', 'image']);
+                // $brand->update($brandFields);
+
+                if($request->file('image')){
+                    Storage::disk('public')->delete($brand->image);
+                }
+
+                $imagePath = $request->file('image')->store('images', 'public');
+                $brand->update([
+                    'image' => $imagePath,
+                    'name' => $request->input('name'),
+                ]);
 
                 return response()->json([
                     'message' => "Marca atualizada com sucesso!",
                     'brand' => $brand, // Inclua o objeto Brand diretamente
                 ], 201);
             }
-            // dd($request->method());
+          
 
             // Adicione o código para lidar com a situação em que $brand não é encontrado
         } catch (HttpResponseException $message) {
@@ -89,10 +109,15 @@ class BrandController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $brand)
+    public function destroy(Request $request, $id)
     {
+        $brand = Brand::find($id);
+
+        if($request->file('image')){
+            Storage::disk('public')->delete($brand->image);
+        }
         //    return Brand::destroy($brand);
-        if (Brand::destroy($brand)) {
+        if (Brand::destroy($id)) {
             return response()->json([
                 'message' => 'Marca excluída com sucesso'
             ], 201);
