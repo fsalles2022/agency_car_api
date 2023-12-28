@@ -109,13 +109,12 @@ class BrandController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, string $id)
     {
-        $brand = Brand::find($id);
+        $brand = Brand::findOrFail($id);
 
-        if($request->file('image')){
             Storage::disk('public')->delete($brand->image);
-        }
+       
         //    return Brand::destroy($brand);
         if (Brand::destroy($id)) {
             return response()->json([
